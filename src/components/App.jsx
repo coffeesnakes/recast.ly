@@ -3,8 +3,9 @@ import VideoList from './VideoList.js';
 import VideoListEntry from './VideoListEntry.js';
 import VideoPlayer from './VideoPlayer.js';
 import exampleVideoData from '../data/exampleVideoData.js';
+// import searchYouTube from '../lib/searchYouTube.js'
 // refactor to Class component
-// use constructor and super
+// use costructor and super
 // set state to hold all videos
 // have state hold a single video in example data
 // render current video
@@ -17,20 +18,65 @@ class App extends React.Component {
       currentVideo: exampleVideoData[0],
     };
     this.onVideoClick = this.onVideoClick.bind(this);
+    this.onSearchSubmit = this.onSearchSubmit.bind(this);
+    this.onInputSearch = this.onInputSearch.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.searchYouTube({
+      key: this.props.YOUTUBE_API_KEY,
+      query: 'tennis',
+      max: 5
+    }, (data) => {
+      this.setState({
+        allVideos: data,
+        currentVideo: data[0]
+      });
+    });
+    console.log('component mounting ..testest');
   }
 
   onVideoClick(video) {
-    console.log(this.state.currentVideo);
     this.setState({
       currentVideo: video
     });
   }
+
+  onSearchSubmit(input) {
+    this.props.searchYouTube({
+      key: this.props.YOUTUBE_API_KEY,
+      query: input,
+      max: 5
+    }, (data) => {
+      this.setState({
+        allVideos: data,
+        currentVideo: data[0]
+      });
+    }
+    );
+  }
+
+  onInputSearch(input) {
+    this.props.searchYouTube({
+      key: this.props.YOUTUBE_API_KEY,
+      query: input,
+      max: 5
+    }, (data) => {
+      this.setState({
+        allVideos: data,
+        currentVideo: data[0]
+      });
+    }
+    );
+
+  }
+
   render() {
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            < Search />
+            < Search onSearchSubmit={this.onSearchSubmit} onInputSearch={this.onInputSearch} />
           </div>
         </nav>
         <div className="row">
@@ -44,45 +90,9 @@ class App extends React.Component {
       </div>
     );
   }
+
+
+
 }
 
-// // var App = () => (
-//   <div>
-//     <nav className="navbar">
-//       <div className="col-md-6 offset-md-3">
-//         < Search />
-//       </div>
-//     </nav>
-//     <div className="row">
-//       <div className="col-md-7">
-//         < VideoPlayer />
-//       </div>
-//       <div className="col-md-5">
-//         < VideoList />
-//       </div>
-//     </div>
-//   </div>
-// );
-
-// In the ES6 spec, files are "modules" and do not share a top-level scope
-// `var` declarations will only exist globally where explicitly defined
 export default App;
-
-
-// var App = () => (
-//   <div>
-//     <nav className="navbar">
-//       <div className="col-md-6 offset-md-3">
-//         < Search />
-//       </div>
-//     </nav>
-//     <div className="row">
-//       <div className="col-md-7">
-//         < VideoPlayer />
-//       </div>
-//       <div className="col-md-5">
-//         < VideoList />
-//       </div>
-//     </div>
-//   </div>
-// );
